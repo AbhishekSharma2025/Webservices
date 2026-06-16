@@ -119,11 +119,14 @@
     });
   }
 
-  function signUp(email, password) {
+  function signUp(email, password, emailRedirectTo) {
     return getSupabase().then(function(client) {
       return client.auth.signUp({
         email: email,
-        password: password
+        password: password,
+        options: emailRedirectTo
+          ? { emailRedirectTo: emailRedirectTo }
+          : undefined
       });
     }).then(function(result) {
       if (result.error) {
