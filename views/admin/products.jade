@@ -1,0 +1,37 @@
+extends ../layout
+
+block content
+  h1 Admin Product List
+  p Use your Bearer token for admin API access.
+
+  .admin-toolbar
+    label(for='tokenInput') Bearer Token
+    input#tokenInput(type='password', placeholder='Paste Supabase access token')
+    label(for='searchInput') Search
+    input#searchInput(type='text', placeholder='Search by product name or ID')
+    label(for='limitSelect') Rows
+    select#limitSelect
+      option(value='10') 10
+      option(value='20' selected=true) 20
+      option(value='50') 50
+    button#applyBtn(type='button') Apply
+
+  p#statusText.status-text Loading...
+
+  table#productsTable
+    thead
+      tr
+        th ID
+        th Name
+        th Cost
+        th Image
+    tbody#productsBody
+      tr
+        td(colspan='4') Loading products...
+
+  .pagination
+    button#prevBtn(type='button') Previous
+    span#pageInfo Page 1
+    button#nextBtn(type='button') Next
+
+  script(src='/javascripts/admin-products.js')
