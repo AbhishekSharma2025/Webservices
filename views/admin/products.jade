@@ -1,12 +1,13 @@
 extends ../layout
 
 block content
-  h1 Admin Product List
-  p Use your Bearer token for admin API access.
+  .admin-header
+    div
+      h1 Admin Product List
+      p#userEmail.admin-subtitle
+    button#logoutBtn(type='button') Log out
 
   .admin-toolbar
-    label(for='tokenInput') Bearer Token
-    input#tokenInput(type='password', placeholder='Paste Supabase access token')
     label(for='searchInput') Search
     input#searchInput(type='text', placeholder='Search by product name or ID')
     label(for='limitSelect') Rows
@@ -34,4 +35,6 @@ block content
     span#pageInfo Page 1
     button#nextBtn(type='button') Next
 
+  script(src='https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2')
+  script(src='/javascripts/admin-auth.js')
   script(src='/javascripts/admin-products.js')

@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var supabase = require('../lib/supabase');
 var adminAuth = require('../lib/adminAuth');
+var supabasePublic = require('../lib/supabasePublic');
 
 var ALLOWED_SORT_FIELDS = {
   product_id: true,
@@ -27,6 +28,29 @@ function toListValue(value) {
   }
   return String(value).trim();
 }
+
+router.get('/', function(req, res) {
+  res.redirect('/admin/login');
+});
+
+router.get('/login', function(req, res) {
+  res.render('admin/login', { title: 'Admin Login' });
+});
+
+router.get('/signup', function(req, res) {
+  res.render('admin/signup', { title: 'Admin Sign Up' });
+});
+
+router.get('/auth/config', function(req, res) {
+  var config = supabasePublic.getPublicConfig();
+  if (!config) {
+    return res.status(503).json({
+      error: 'Supabase public auth is not configured. Set SUPABASE_URL and SUPABASE_ANON_KEY.'
+    });
+  }
+
+  res.json(config);
+});
 
 router.get('/products/page', function(req, res) {
   res.render('admin/products', { title: 'Admin Product List' });

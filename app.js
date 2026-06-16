@@ -33,7 +33,11 @@ app.use(function(req, res, next) {
 
 // error handler
 app.use(function(err, req, res, next) {
-  if (req.path.startsWith('/products') || req.path === '/admin/products') {
+  if (
+    req.path.startsWith('/products') ||
+    req.path.startsWith('/admin/products') ||
+    req.path.startsWith('/admin/auth')
+  ) {
     return res.status(err.status || 500).json({ error: err.message });
   }
 

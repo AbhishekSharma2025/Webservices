@@ -1,0 +1,34 @@
+extends ../layout
+
+block content
+  .auth-card
+    h1 Admin Sign Up
+    p.auth-subtitle Create an account for the admin portal.
+
+    form#signupForm.auth-form
+      label(for='email') Email
+      input#email(type='email', name='email', required=true, autocomplete='email')
+
+      label(for='password') Password
+      input#password(type='password', name='password', required=true, minlength='6', autocomplete='new-password')
+
+      label(for='confirmPassword') Confirm Password
+      input#confirmPassword(type='password', name='confirmPassword', required=true, minlength='6', autocomplete='new-password')
+
+      button(type='submit') Create Account
+
+    p#signupError.auth-error.hidden
+    p#signupSuccess.auth-success.hidden
+
+    p.auth-footer
+      | Already have an account?
+      a(href='/admin/login') Sign in
+
+    p.auth-note
+      | After signup, an administrator must assign the
+      code admin
+      |  role in Supabase before you can access admin pages.
+
+  script(src='https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2')
+  script(src='/javascripts/admin-auth.js')
+  script(src='/javascripts/admin-signup.js')

@@ -6,7 +6,6 @@
     search: ''
   };
 
-  var tokenInput = document.getElementById('tokenInput');
   var searchInput = document.getElementById('searchInput');
   var limitSelect = document.getElementById('limitSelect');
   var applyBtn = document.getElementById('applyBtn');
@@ -15,6 +14,14 @@
   var pageInfo = document.getElementById('pageInfo');
   var statusText = document.getElementById('statusText');
   var productsBody = document.getElementById('productsBody');
+  var userEmail = document.getElementById('userEmail');
+  var logoutBtn = document.getElementById('logoutBtn');
+
+  if (!AdminAuth.requireAuth('/admin/login')) {
+    return;
+  }
+
+  userEmail.textContent = AdminAuth.getUserEmail() || '';
 
   function setStatus(message, isError) {
     statusText.textContent = message;
@@ -53,11 +60,29 @@
     nextBtn.disabled = state.totalPages === 0 || state.page >= state.totalPages;
   }
 
+  function handleAuthError(response, payload) {
+    if (response.status === 401) {
+      AdminAuth.clearSession();
+      window.location.href = '/admin/login';
+      return true;
+    }
+
+    if (response.status === 403) {
+      setStatus(
+        (payload && payload.error) ||
+          'Admin access required. Ask an administrator to set app_metadata.role to admin.',
+        true
+      );
+      return true;
+    }
+
+    return false;
+  }
+
   async function loadProducts() {
-    var token = tokenInput.value.trim();
+    var token = AdminAuth.getAccessToken();
     if (!token) {
-      setStatus('Paste a Bearer token to load admin products.', true);
-      productsBody.innerHTML = '<tr><td colspan="4">Token required.</td></tr>';
+      window.location.href = '/admin/login';
       return;
     }
 
@@ -81,6 +106,11 @@
 
       var payload = await response.json();
       if (!response.ok) {
+        if (handleAuthError(response, payload)) {
+          productsBody.innerHTML = '<tr><td colspan="4">Access denied.</td></tr>';
+          return;
+        }
+
         throw new Error(payload.error || 'Failed to load products');
       }
 
@@ -118,6 +148,11 @@
     loadProducts();
   });
 
+  logoutBtn.addEventListener('click', function() {
+    AdminAuth.signOut();
+  });
+
   limitSelect.value = String(state.limit);
   updatePagination();
+  loadProducts();
 })();

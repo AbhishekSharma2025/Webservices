@@ -50,3 +50,69 @@ th {
 .status-text.error {
   color: #b00020;
 }
+
+.auth-card {
+  max-width: 420px;
+  margin: 0 auto;
+  padding: 24px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.auth-subtitle {
+  color: #666;
+  margin-top: -8px;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.auth-form input {
+  padding: 8px;
+}
+
+.auth-form button,
+#logoutBtn {
+  margin-top: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.auth-error {
+  color: #b00020;
+}
+
+.auth-success {
+  color: #0a7a2f;
+}
+
+.auth-footer,
+.auth-note {
+  margin-top: 16px;
+}
+
+.auth-note {
+  font-size: 13px;
+  color: #666;
+}
+
+.hidden {
+  display: none;
+}
+
+.admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.admin-subtitle {
+  color: #666;
+  margin-top: -8px;
+}

@@ -1,0 +1,25 @@
+extends ../layout
+
+block content
+  .auth-card
+    h1 Admin Login
+    p.auth-subtitle Sign in with your Supabase account.
+
+    form#loginForm.auth-form
+      label(for='email') Email
+      input#email(type='email', name='email', required=true, autocomplete='email')
+
+      label(for='password') Password
+      input#password(type='password', name='password', required=true, autocomplete='current-password')
+
+      button(type='submit') Sign In
+
+    p#loginError.auth-error.hidden
+
+    p.auth-footer
+      | Don't have an account?
+      a(href='/admin/signup') Sign up
+
+  script(src='https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2')
+  script(src='/javascripts/admin-auth.js')
+  script(src='/javascripts/admin-login.js')
