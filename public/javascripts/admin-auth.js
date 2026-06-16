@@ -156,14 +156,107 @@
       });
   }
 
+  function getRedirectUrl(path) {
+    return loadConfig().then(function(config) {
+      var base = config.siteUrl || window.location.origin;
+      return base.replace(/\/+$/, '') + path;
+    });
+  }
+
+  function bootstrapAdmin() {
+    var token = getAccessToken();
+    if (!token) {
+      return Promise.resolve({ granted: false, error: 'Not signed in' });
+    }
+
+    return fetch('/admin/auth/bootstrap', {
+      method: 'POST',
+      headers: {
+        Authorization: 'Bearer ' + token
+      }
+    }).then(function(response) {
+      return response.json().then(function(payload) {
+        return {
+          granted: response.ok && payload.granted === true,
+          error: payload.error || null,
+          message: payload.message || null
+        };
+      });
+    });
+  }
+
+  function parseHashParams() {
+    var hash = window.location.hash;
+    if (!hash || hash.charAt(0) !== '#') {
+      return new URLSearchParams();
+    }
+
+    return new URLSearchParams(hash.substring(1));
+  }
+
+  function clearHashFromUrl() {
+    if (window.location.hash) {
+      window.history.replaceState(null, '', window.location.pathname + window.location.search);
+    }
+  }
+
+  function handleEmailCallback() {
+    var params = parseHashParams();
+    var error = params.get('error');
+    var errorDescription = params.get('error_description');
+
+    if (error) {
+      clearHashFromUrl();
+      return Promise.reject(new Error(errorDescription || error));
+    }
+
+    var accessToken = params.get('access_token');
+    var refreshToken = params.get('refresh_token');
+
+    if (!accessToken) {
+      return Promise.resolve(false);
+    }
+
+    return getSupabase()
+      .then(function(client) {
+        return client.auth.setSession({
+          access_token: accessToken,
+          refresh_token: refreshToken
+        });
+      })
+      .then(function(result) {
+        if (result.error) {
+          throw result.error;
+        }
+
+        saveSession(result.data.session);
+        clearHashFromUrl();
+        return true;
+      });
+  }
+
+  function completeAuthFlow() {
+    return bootstrapAdmin().then(function(result) {
+      if (!result.granted) {
+        throw new Error(result.error || 'Admin access could not be granted for this account.');
+      }
+
+      return result;
+    });
+  }
+
   global.AdminAuth = {
     loadConfig: loadConfig,
+    getRedirectUrl: getRedirectUrl,
     getAccessToken: getAccessToken,
     getUserEmail: getUserEmail,
     requireAuth: requireAuth,
     signIn: signIn,
     signUp: signUp,
     signOut: signOut,
-    clearSession: clearSession
+    clearSession: clearSession,
+    bootstrapAdmin: bootstrapAdmin,
+    completeAuthFlow: completeAuthFlow,
+    handleEmailCallback: handleEmailCallback
   };
 })(window);

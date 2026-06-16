@@ -39,10 +39,11 @@
     submitBtn.textContent = 'Creating account...';
 
     try {
-      var redirectTo = window.location.origin + '/admin/login';
+      var redirectTo = await AdminAuth.getRedirectUrl('/admin/login');
       var data = await AdminAuth.signUp(email, password, redirectTo);
 
       if (data.session) {
+        await AdminAuth.completeAuthFlow();
         window.location.href = '/admin/products/page';
         return;
       }

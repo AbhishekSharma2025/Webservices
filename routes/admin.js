@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var supabase = require('../lib/supabase');
 var adminAuth = require('../lib/adminAuth');
+var adminBootstrap = require('../lib/adminBootstrap');
 var supabasePublic = require('../lib/supabasePublic');
 
 var ALLOWED_SORT_FIELDS = {
@@ -50,6 +51,29 @@ router.get('/auth/config', function(req, res) {
   }
 
   res.json(config);
+});
+
+router.post('/auth/bootstrap', adminAuth.requireAuthenticated, async function(req, res, next) {
+  try {
+    var result = await adminBootstrap.bootstrapAdminUser(req.authUser);
+
+    if (!result.granted) {
+      return res.status(403).json({
+        granted: false,
+        error: result.reason || 'Admin access could not be granted'
+      });
+    }
+
+    res.json({
+      granted: true,
+      alreadyAdmin: result.alreadyAdmin,
+      message: result.alreadyAdmin
+        ? 'User already has admin access'
+        : 'Admin access granted'
+    });
+  } catch (err) {
+    next(err);
+  }
 });
 
 router.get('/products/page', function(req, res) {

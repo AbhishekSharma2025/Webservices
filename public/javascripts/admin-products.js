@@ -68,18 +68,18 @@
     }
 
     if (response.status === 403) {
-      setStatus(
-        (payload && payload.error) ||
-          'Admin access required. Ask an administrator to set app_metadata.role to admin.',
-        true
-      );
-      return true;
+      return false;
     }
 
     return false;
   }
 
-  async function loadProducts() {
+  async function tryGrantAdminAccess() {
+    var result = await AdminAuth.bootstrapAdmin();
+    return result.granted === true;
+  }
+
+  async function loadProducts(retryAfterGrant) {
     var token = AdminAuth.getAccessToken();
     if (!token) {
       window.location.href = '/admin/login';
@@ -106,6 +106,21 @@
 
       var payload = await response.json();
       if (!response.ok) {
+        if (response.status === 403 && !retryAfterGrant) {
+          var granted = await tryGrantAdminAccess();
+          if (granted) {
+            return loadProducts(true);
+          }
+
+          setStatus(
+            (payload && payload.error) ||
+              'Admin access required. Add your email to ADMIN_EMAILS on the server.',
+            true
+          );
+          productsBody.innerHTML = '<tr><td colspan="4">Access denied.</td></tr>';
+          return;
+        }
+
         if (handleAuthError(response, payload)) {
           productsBody.innerHTML = '<tr><td colspan="4">Access denied.</td></tr>';
           return;

@@ -7,6 +7,23 @@
     errorEl.classList.remove('hidden');
   }
 
+  AdminAuth.handleEmailCallback()
+    .then(function(confirmed) {
+      if (!confirmed) {
+        return;
+      }
+
+      return AdminAuth.completeAuthFlow();
+    })
+    .then(function(result) {
+      if (result) {
+        window.location.href = '/admin/products/page';
+      }
+    })
+    .catch(function(err) {
+      showError(err.message || 'Email confirmation failed.');
+    });
+
   form.addEventListener('submit', async function(event) {
     event.preventDefault();
     errorEl.classList.add('hidden');
@@ -20,6 +37,7 @@
 
     try {
       await AdminAuth.signIn(email, password);
+      await AdminAuth.completeAuthFlow();
       window.location.href = '/admin/products/page';
     } catch (err) {
       showError(err.message || 'Unable to sign in.');
