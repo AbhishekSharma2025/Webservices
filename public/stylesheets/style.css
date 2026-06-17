@@ -116,3 +116,40 @@ th {
   color: #666;
   margin-top: -8px;
 }
+
+.product-detail-card {
+  max-width: 520px;
+  margin-top: 16px;
+}
+
+.product-image-preview {
+  margin-bottom: 8px;
+}
+
+.product-thumb {
+  max-width: 200px;
+  max-height: 200px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.form-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.button-link,
+.detail-link {
+  display: inline-block;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  text-decoration: none;
+  color: inherit;
+}
+
+.detail-link {
+  padding: 4px 10px;
+  font-size: 13px;
+}

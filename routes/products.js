@@ -63,6 +63,39 @@ router.get('/', async function(req, res, next) {
   }
 });
 
+/* GET single product by product_id. */
+router.get('/:product_id', async function(req, res, next) {
+  if (!supabase) {
+    return res.status(503).json({ error: 'Supabase is not configured' });
+  }
+
+  var productId = Number(req.params.product_id);
+
+  if (isNaN(productId) || productId <= 0) {
+    return res.status(400).json({ error: 'Valid product_id is required' });
+  }
+
+  try {
+    var result = await supabase
+      .from('products')
+      .select(PRODUCT_FIELDS)
+      .eq('product_id', productId)
+      .maybeSingle();
+
+    if (result.error) {
+      return res.status(500).json({ error: result.error.message });
+    }
+
+    if (!result.data) {
+      return res.status(404).json({ error: 'Product not found' });
+    }
+
+    res.json({ source: 'supabase', product: result.data });
+  } catch (err) {
+    next(err);
+  }
+});
+
 /* POST create product. */
 router.post('/', upload.single('image'), async function(req, res, next) {
   if (!supabase) {

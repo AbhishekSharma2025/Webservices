@@ -1,0 +1,40 @@
+extends ../layout
+
+block content
+  .admin-header
+    div
+      h1 Product Details
+      p#userEmail.admin-subtitle
+    button#logoutBtn(type='button') Log out
+
+  p
+    a(href='/admin/products/page') ← Back to product list
+
+  p#statusText.status-text Loading...
+
+  .auth-card.product-detail-card
+    form#productForm.auth-form(enctype='multipart/form-data')
+      input#productId(type='hidden', name='product_id', value=productId)
+
+      label(for='name') Name
+      input#name(type='text', name='name', required=true)
+
+      label(for='cost') Cost
+      input#cost(type='number', name='cost', min='0', step='0.01', required=true)
+
+      label Current Image
+      #currentImageWrap.product-image-preview
+        span#currentImageText No image
+
+      label(for='image') Replace Image (optional)
+      input#image(type='file', name='image', accept='image/*')
+
+      .form-actions
+        button#saveBtn(type='submit') Save Changes
+        a.button-link(href='/admin/products/page') Cancel
+
+    p#formError.auth-error.hidden
+
+  script(src='https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2')
+  script(src='/javascripts/admin-auth.js')
+  script(src='/javascripts/admin-product-detail.js')

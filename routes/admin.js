@@ -119,6 +119,19 @@ router.get('/products/page', function(req, res) {
   res.render('admin/products', { title: 'Admin Product List' });
 });
 
+router.get('/products/:product_id/page', function(req, res) {
+  var productId = Number(req.params.product_id);
+
+  if (isNaN(productId) || productId <= 0) {
+    return res.redirect('/admin/products/page');
+  }
+
+  res.render('admin/product-detail', {
+    title: 'Product Details',
+    productId: productId
+  });
+});
+
 router.get('/products', adminAuth.requireAdmin, async function(req, res, next) {
   if (!supabase) {
     return res.status(503).json({ error: 'Supabase is not configured' });

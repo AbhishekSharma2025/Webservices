@@ -30,7 +30,7 @@
 
   function renderRows(items) {
     if (!items || items.length === 0) {
-      productsBody.innerHTML = '<tr><td colspan="4">No products found.</td></tr>';
+      productsBody.innerHTML = '<tr><td colspan="5">No products found.</td></tr>';
       return;
     }
 
@@ -40,6 +40,7 @@
       var safeImage = product.img_url
         ? '<a href="' + product.img_url + '" target="_blank" rel="noreferrer">View image</a>'
         : '-';
+      var detailUrl = '/admin/products/' + product.product_id + '/page';
 
       return (
         '<tr>' +
@@ -47,6 +48,7 @@
         '<td>' + safeName + '</td>' +
         '<td>' + safeCost + '</td>' +
         '<td>' + safeImage + '</td>' +
+        '<td><a class="detail-link" href="' + detailUrl + '">Detail</a></td>' +
         '</tr>'
       );
     });
@@ -117,12 +119,12 @@
               'Admin access required. Check ADMIN_EMAILS or AUTO_GRANT_ADMIN on the server.',
             true
           );
-          productsBody.innerHTML = '<tr><td colspan="4">Access denied.</td></tr>';
+          productsBody.innerHTML = '<tr><td colspan="5">Access denied.</td></tr>';
           return;
         }
 
         if (handleAuthError(response, payload)) {
-          productsBody.innerHTML = '<tr><td colspan="4">Access denied.</td></tr>';
+          productsBody.innerHTML = '<tr><td colspan="5">Access denied.</td></tr>';
           return;
         }
 
@@ -136,7 +138,7 @@
       setStatus('Loaded ' + (payload.items || []).length + ' products (total: ' + (payload.total || 0) + ').', false);
     } catch (err) {
       setStatus(err.message || 'Failed to load products.', true);
-      productsBody.innerHTML = '<tr><td colspan="4">Unable to load products.</td></tr>';
+      productsBody.innerHTML = '<tr><td colspan="5">Unable to load products.</td></tr>';
     }
   }
 
