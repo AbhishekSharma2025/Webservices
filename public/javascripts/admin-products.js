@@ -114,7 +114,7 @@
 
           setStatus(
             (payload && payload.error) ||
-              'Admin access required. Add your email to ADMIN_EMAILS on the server.',
+              'Admin access required. Check ADMIN_EMAILS or AUTO_GRANT_ADMIN on the server.',
             true
           );
           productsBody.innerHTML = '<tr><td colspan="4">Access denied.</td></tr>';

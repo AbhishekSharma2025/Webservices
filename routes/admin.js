@@ -76,6 +76,45 @@ router.post('/auth/bootstrap', adminAuth.requireAuthenticated, async function(re
   }
 });
 
+router.post('/auth/signup', async function(req, res, next) {
+  if (!process.env.SUPABASE_SERVICE_ROLE_KEY || !supabase) {
+    return res.status(503).json({
+      error: 'Server auth not configured. Set SUPABASE_SERVICE_ROLE_KEY on Render.'
+    });
+  }
+
+  var email = typeof req.body.email === 'string' ? req.body.email.trim() : '';
+  var password = req.body.password;
+
+  if (!email || !password) {
+    return res.status(400).json({ error: 'Email and password are required' });
+  }
+
+  if (String(password).length < 6) {
+    return res.status(400).json({ error: 'Password must be at least 6 characters' });
+  }
+
+  try {
+    var result = await supabase.auth.admin.createUser({
+      email: email,
+      password: password,
+      email_confirm: true,
+      app_metadata: { role: 'admin' }
+    });
+
+    if (result.error) {
+      return res.status(400).json({ error: result.error.message });
+    }
+
+    res.status(201).json({
+      message: 'Account created with admin access',
+      userId: result.data.user.id
+    });
+  } catch (err) {
+    next(err);
+  }
+});
+
 router.get('/products/page', function(req, res) {
   res.render('admin/products', { title: 'Admin Product List' });
 });

@@ -15,6 +15,32 @@
     errorEl.classList.add('hidden');
   }
 
+  async function createAccount(email, password) {
+    var serverResponse = await fetch('/admin/auth/signup', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        email: email,
+        password: password
+      })
+    });
+
+    var serverPayload = await serverResponse.json();
+    if (serverResponse.ok) {
+      return { source: 'server', data: serverPayload };
+    }
+
+    if (serverResponse.status !== 503) {
+      throw new Error(serverPayload.error || 'Unable to create account.');
+    }
+
+    var redirectTo = await AdminAuth.getRedirectUrl('/admin/login');
+    var data = await AdminAuth.signUp(email, password, redirectTo);
+    return { source: 'client', data: data };
+  }
+
   form.addEventListener('submit', async function(event) {
     event.preventDefault();
     errorEl.classList.add('hidden');
@@ -39,10 +65,16 @@
     submitBtn.textContent = 'Creating account...';
 
     try {
-      var redirectTo = await AdminAuth.getRedirectUrl('/admin/login');
-      var data = await AdminAuth.signUp(email, password, redirectTo);
+      var result = await createAccount(email, password);
 
-      if (data.session) {
+      if (result.source === 'server') {
+        await AdminAuth.signIn(email, password);
+        await AdminAuth.completeAuthFlow();
+        window.location.href = '/admin/products/page';
+        return;
+      }
+
+      if (result.data.session) {
         await AdminAuth.completeAuthFlow();
         window.location.href = '/admin/products/page';
         return;
