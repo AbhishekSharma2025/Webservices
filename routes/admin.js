@@ -116,7 +116,11 @@ router.post('/auth/signup', async function(req, res, next) {
 });
 
 router.get('/products/page', function(req, res) {
-  res.render('admin/products', { title: 'Admin Product List' });
+  res.render('admin/products', {
+    title: 'Admin Product List',
+    pageHeading: 'Product List',
+    activeNav: 'products'
+  });
 });
 
 router.get('/products/:product_id/page', function(req, res) {
@@ -128,6 +132,8 @@ router.get('/products/:product_id/page', function(req, res) {
 
   res.render('admin/product-detail', {
     title: 'Product Details',
+    pageHeading: 'Product Details',
+    activeNav: 'products',
     productId: productId
   });
 });

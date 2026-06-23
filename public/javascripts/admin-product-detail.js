@@ -45,7 +45,7 @@
 
     currentImageWrap.innerHTML =
       '<a href="' + imgUrl + '" target="_blank" rel="noreferrer">' +
-      '<img src="' + imgUrl + '" alt="Product image" class="product-thumb">' +
+      '<img src="' + imgUrl + '" alt="Product image" class="product-thumb img-thumbnail">' +
       '</a>';
   }
 

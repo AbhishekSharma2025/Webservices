@@ -1,40 +1,64 @@
-extends ../layout
+extends layout
+
+block breadcrumb
+  li.breadcrumb-item
+    a(href='/admin/products/page') Products
+  li.breadcrumb-item.active Product Details
 
 block content
-  .admin-header
-    div
-      h1 Product Details
-      p#userEmail.admin-subtitle
-    button#logoutBtn(type='button') Log out
+  .row
+    .col-lg-8.col-xl-6
+      .card.card-primary
+        .card-header
+          h3.card-title Edit Product ##{productId}
+          .card-tools
+            a.btn.btn-tool(href='/admin/products/page', title='Back')
+              i.fas.fa-arrow-left
 
-  p
-    a(href='/admin/products/page') ← Back to product list
+        .card-body
+          p#statusText.status-text.mb-3 Loading...
 
-  p#statusText.status-text Loading...
+          form#productForm(enctype='multipart/form-data')
+            input#productId(type='hidden', name='product_id', value=productId)
 
-  .auth-card.product-detail-card
-    form#productForm.auth-form(enctype='multipart/form-data')
-      input#productId(type='hidden', name='product_id', value=productId)
+            .form-group
+              label(for='name') Name
+              input#name.form-control(type='text', name='name', required=true)
 
-      label(for='name') Name
-      input#name(type='text', name='name', required=true)
+            .form-group
+              label(for='cost') Cost
+              .input-group
+                .input-group-prepend
+                  span.input-group-text
+                    i.fas.fa-dollar-sign
+                input#cost.form-control(type='number', name='cost', min='0', step='0.01', required=true)
 
-      label(for='cost') Cost
-      input#cost(type='number', name='cost', min='0', step='0.01', required=true)
+            .form-group
+              label Current Image
+              #currentImageWrap.product-image-preview.mb-2
+                span#currentImageText.text-muted No image
 
-      label Current Image
-      #currentImageWrap.product-image-preview
-        span#currentImageText No image
+            .form-group
+              label(for='image') Replace Image (optional)
+              .input-group
+                .custom-file
+                  input#image.custom-file-input(type='file', name='image', accept='image/*')
+                  label.custom-file-label(for='image') Choose file
 
-      label(for='image') Replace Image (optional)
-      input#image(type='file', name='image', accept='image/*')
+            p#formError.auth-error.hidden
 
-      .form-actions
-        button#saveBtn(type='submit') Save Changes
-        a.button-link(href='/admin/products/page') Cancel
+        .card-footer
+          button#saveBtn.btn.btn-primary(type='submit')
+            i.fas.fa-save.mr-1
+            | Save Changes
+          a.btn.btn-default.ml-2(href='/admin/products/page') Cancel
 
-    p#formError.auth-error.hidden
-
+block scripts
   script(src='https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2')
   script(src='/javascripts/admin-auth.js')
   script(src='/javascripts/admin-product-detail.js')
+  script.
+    $('.custom-file-input').on('change', function() {
+      var fileName = $(this).val().split('\\').pop();
+      $(this).next('.custom-file-label').html(fileName || 'Choose file');
+    });

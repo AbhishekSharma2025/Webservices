@@ -1,32 +1,45 @@
-extends ../layout
+extends auth-layout
 
 block content
-  .auth-card
-    h1 Admin Sign Up
-    p.auth-subtitle Create an account for the admin portal.
+  .register-box
+    .register-logo
+      a(href='/admin/login')
+        b Admin
+        |  Portal
+    .card
+      .card-body.register-card-body
+        p.login-box-msg Register a new account
 
-    form#signupForm.auth-form
-      label(for='email') Email
-      input#email(type='email', name='email', required=true, autocomplete='email')
+        form#signupForm
+          .input-group.mb-3
+            input#email.form-control(type='email', name='email', placeholder='Email', required=true, autocomplete='email')
+            .input-group-append
+              .input-group-text
+                span.fas.fa-envelope
+          .input-group.mb-3
+            input#password.form-control(type='password', name='password', placeholder='Password', required=true, minlength='6', autocomplete='new-password')
+            .input-group-append
+              .input-group-text
+                span.fas.fa-lock
+          .input-group.mb-3
+            input#confirmPassword.form-control(type='password', name='confirmPassword', placeholder='Confirm password', required=true, minlength='6', autocomplete='new-password')
+            .input-group-append
+              .input-group-text
+                span.fas.fa-lock
+          .row
+            .col-12
+              button.btn.btn-primary.btn-block(type='submit') Create Account
 
-      label(for='password') Password
-      input#password(type='password', name='password', required=true, minlength='6', autocomplete='new-password')
+        p#signupError.auth-error.hidden.mt-2.mb-0
+        p#signupSuccess.auth-success.hidden.mt-2.mb-0
 
-      label(for='confirmPassword') Confirm Password
-      input#confirmPassword(type='password', name='confirmPassword', required=true, minlength='6', autocomplete='new-password')
+        p.mb-0.mt-3
+          a(href='/admin/login') I already have an account
 
-      button(type='submit') Create Account
+        p.text-muted.mt-3.mb-0.small
+          | Admin access is granted automatically for approved emails configured on the server.
 
-    p#signupError.auth-error.hidden
-    p#signupSuccess.auth-success.hidden
-
-    p.auth-footer
-      | Already have an account?
-      a(href='/admin/login') Sign in
-
-    p.auth-note
-      | Admin access is granted automatically for approved emails configured on the server.
-
+block scripts
   script(src='https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2')
   script(src='/javascripts/admin-auth.js')
   script(src='/javascripts/admin-signup.js')

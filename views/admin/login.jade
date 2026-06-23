@@ -1,25 +1,36 @@
-extends ../layout
+extends auth-layout
 
 block content
-  .auth-card
-    h1 Admin Login
-    p.auth-subtitle Sign in with your Supabase account.
+  .login-box
+    .login-logo
+      a(href='/admin/login')
+        b Admin
+        |  Portal
+    .card
+      .card-body.login-card-body
+        p.login-box-msg Sign in to start your session
 
-    form#loginForm.auth-form
-      label(for='email') Email
-      input#email(type='email', name='email', required=true, autocomplete='email')
+        form#loginForm
+          .input-group.mb-3
+            input#email.form-control(type='email', name='email', placeholder='Email', required=true, autocomplete='email')
+            .input-group-append
+              .input-group-text
+                span.fas.fa-envelope
+          .input-group.mb-3
+            input#password.form-control(type='password', name='password', placeholder='Password', required=true, autocomplete='current-password')
+            .input-group-append
+              .input-group-text
+                span.fas.fa-lock
+          .row
+            .col-12
+              button.btn.btn-primary.btn-block(type='submit') Sign In
 
-      label(for='password') Password
-      input#password(type='password', name='password', required=true, autocomplete='current-password')
+        p#loginError.auth-error.hidden.mt-2.mb-0
 
-      button(type='submit') Sign In
+        p.mb-0.mt-3
+          a(href='/admin/signup') Register a new account
 
-    p#loginError.auth-error.hidden
-
-    p.auth-footer
-      | Don't have an account?
-      a(href='/admin/signup') Sign up
-
+block scripts
   script(src='https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2')
   script(src='/javascripts/admin-auth.js')
   script(src='/javascripts/admin-login.js')

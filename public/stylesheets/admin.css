@@ -1,0 +1,36 @@
+.hidden {
+  display: none !important;
+}
+
+.login-logo a,
+.register-logo a {
+  color: #495057;
+}
+
+.product-thumb {
+  max-width: 220px;
+  max-height: 220px;
+}
+
+#logoutBtn {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+#logoutBtn:hover {
+  color: #007bff;
+}
+
+.status-text.error,
+.auth-error {
+  color: #dc3545;
+}
+
+.auth-success {
+  color: #28a745;
+}
+
+.detail-link {
+  white-space: nowrap;
+}

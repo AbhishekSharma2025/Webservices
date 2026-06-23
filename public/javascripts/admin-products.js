@@ -48,7 +48,9 @@
         '<td>' + safeName + '</td>' +
         '<td>' + safeCost + '</td>' +
         '<td>' + safeImage + '</td>' +
-        '<td><a class="detail-link" href="' + detailUrl + '">Detail</a></td>' +
+        '<td class="text-right">' +
+        '<a class="btn btn-sm btn-info detail-link" href="' + detailUrl + '">' +
+        '<i class="fas fa-eye"></i> Detail</a></td>' +
         '</tr>'
       );
     });

@@ -1,41 +1,53 @@
-extends ../layout
+extends layout
+
+block breadcrumb
+  li.breadcrumb-item
+    a(href='/admin/products/page') Products
+  li.breadcrumb-item.active Product List
 
 block content
-  .admin-header
-    div
-      h1 Admin Product List
-      p#userEmail.admin-subtitle
-    button#logoutBtn(type='button') Log out
+  .row
+    .col-12
+      .card
+        .card-header
+          h3.card-title Products
+          .card-tools
+            form.form-inline.d-inline-flex.flex-wrap(onsubmit='return false;')
+              .input-group.input-group-sm.mr-2
+                input#searchInput.form-control(type='text', placeholder='Search by name or ID')
+                .input-group-append
+                  button#applyBtn.btn.btn-primary(type='button')
+                    i.fas.fa-search.mr-1
+                    | Apply
+              select#limitSelect.custom-select.custom-select-sm.mr-2
+                option(value='10') 10 rows
+                option(value='20' selected=true) 20 rows
+                option(value='50') 50 rows
 
-  .admin-toolbar
-    label(for='searchInput') Search
-    input#searchInput(type='text', placeholder='Search by product name or ID')
-    label(for='limitSelect') Rows
-    select#limitSelect
-      option(value='10') 10
-      option(value='20' selected=true) 20
-      option(value='50') 50
-    button#applyBtn(type='button') Apply
+        .card-body.p-0
+          p#statusText.status-text.px-3.pt-3.mb-0 Loading...
 
-  p#statusText.status-text Loading...
+          .table-responsive
+            table#productsTable.table.table-striped.table-hover.mb-0
+              thead
+                tr
+                  th ID
+                  th Name
+                  th Cost
+                  th Image
+                  th.text-right Actions
+              tbody#productsBody
+                tr
+                  td(colspan='5').text-center.p-4 Loading products...
 
-  table#productsTable
-    thead
-      tr
-        th ID
-        th Name
-        th Cost
-        th Image
-        th Actions
-    tbody#productsBody
-      tr
-        td(colspan='5') Loading products...
+        .card-footer.clearfix
+          .float-left
+            span#pageInfo.text-muted Page 1
+          .float-right
+            button#prevBtn.btn.btn-sm.btn-default.mr-1(type='button') Previous
+            button#nextBtn.btn.btn-sm.btn-default(type='button') Next
 
-  .pagination
-    button#prevBtn(type='button') Previous
-    span#pageInfo Page 1
-    button#nextBtn(type='button') Next
-
+block scripts
   script(src='https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2')
   script(src='/javascripts/admin-auth.js')
   script(src='/javascripts/admin-products.js')
